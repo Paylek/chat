@@ -10,13 +10,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -41,24 +42,24 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.httpBasic(withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
+        http
+                .httpBasic(withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/auth").permitAll()
-                                .requestMatchers("/init").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/messages").authenticated()
-                                .requestMatchers(HttpMethod.POST, "/messages").authenticated()
+                        auth
+                                .requestMatchers("/login/**").permitAll()
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/init/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/messages/**").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/messages/**").authenticated()
+                                .requestMatchers(toH2Console()).permitAll()
                                 .anyRequest().authenticated()
-                );
-
+                )
+                .csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()))
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
         http.authenticationProvider(authProvider());
         return http.build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/js/**", "/images/**");
     }
 
     @Bean
