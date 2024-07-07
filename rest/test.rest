@@ -1,4 +1,4 @@
-POST http://localhost:8080/auth?name=Mikl&sex=M
+POST http://localhost:8080/auth?name=Ods&sex=M
 Content-Type: application/json
 
 ###
