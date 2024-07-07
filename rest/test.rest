@@ -1,0 +1,22 @@
+POST http://localhost:8080/auth?name=Pasha&sex=M
+Content-Type: application/json
+
+###
+GET http://localhost:8080/init
+Accept: application/json
+
+###
+GET http://localhost:8080/users
+Accept: application/json
+
+###
+POST http://localhost:8080/messages
+Content-Type: application/json
+
+hello Vadim
+
+###
+GET http://localhost:8080/messages?offset=1&limit=50
+Accept: application/json
+
+###
