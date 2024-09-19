@@ -6,6 +6,10 @@ POST http://localhost:8080/auth?name=Pavel&sex=M
 Content-Type: application/json
 
 ###
+POST http://localhost:8080/auth?name=Visha&sex=M
+Content-Type: application/json
+
+###
 GET http://localhost:8080/init
 Accept: application/json
 
@@ -26,4 +30,45 @@ Accept: application/json
 GET http://localhost:8080/404
 Accept: application/json
 
+###
+POST http://localhost:8080/method/post
+Content-Type: application/json
+
+gfhjjyhr
+###
+
+POST http://localhost:8080/objectMapper
+Content-Type: application/json
+Accept: application/json
+
+{"id": "1", "text" : "dsgsdhgsdhgsd"}
+###
+
+POST http://localhost:8080/objectMapperMap
+Content-Type: application/json
+Accept: application/json
+
+{
+  "CS": {"id": "1", "text" : "POSt1"},
+  "Linux": {"id": "2", "text" : "POSt2"},
+  "Kotlin": {"id": "3", "text" : "POSt3"}
+}
+###
+
+POST http://localhost:8080/objectMapperList
+Content-Type: application/json
+Accept: application/json
+
+[{"id": "1", "text" : "POSt1"},
+  {"id": "2", "text" : "POSt2"},
+  {"id": "3", "text" : "POSt3"}]
+###
+
+POST http://localhost:8080/objectMapperList
+Content-Type: application/json
+Accept: application/json
+
+[{"id": "1", "text" : "POSt1"},
+  {"id": "2", "text" : "POSt2"},
+  {"id": "3", "text" : "POSt3"}]
 ###

@@ -23,10 +23,10 @@ public class MessageDTO {
     public static MessageDTO toDTO(Message message) {
         return MessageDTO
                 .builder()
+                .message(message.getText())
                 .id(message.getId())
                 .creationLDT(message.getCreationLDT().format(FORMATTER))
                 .authorId(message.getAuthorId())
-                .message(message.getText())
                 .build();
     }
 }

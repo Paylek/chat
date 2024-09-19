@@ -30,7 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class MessageControllerTest {
+
+public class CardControllerTest {
     private static final String TEXT = "Hello world";
     private static final UserResource USER_CREDENTIAL = new UserResource("admin", "password");
     @Autowired
@@ -53,9 +54,18 @@ public class MessageControllerTest {
     }
 
     @Test
-    public void postMessages() throws Exception {
+    public void misha() throws Exception {
         mvc.perform(MockMvcRequestBuilders
-                        .post("/messages").with(user(USER_CREDENTIAL.getUsername()).password(USER_CREDENTIAL.getPassword()).roles(Role.ADMIN.toString()))
+                        .post("/post")
+                        .param("name", "Pavel")
+                        .param("sex", Gender.M.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.text").value(true));
+
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/post").with(user(USER_CREDENTIAL.getUsername()).password(USER_CREDENTIAL.getPassword()).roles(Role.ADMIN.toString()))
                         .content(TEXT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .sessionAttr(AuthenticationService.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext())
@@ -91,4 +101,5 @@ public class MessageControllerTest {
     private void authenticateUser() {
         authenticationService.authenticate(USER_CREDENTIAL);
     }
+
 }

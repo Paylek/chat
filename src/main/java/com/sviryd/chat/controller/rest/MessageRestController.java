@@ -1,5 +1,8 @@
 package com.sviryd.chat.controller.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sviryd.chat.domain.Message;
 import com.sviryd.chat.domain.User;
 import com.sviryd.chat.dto.MessageDTO;
@@ -14,9 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class MessageRestController {
@@ -62,5 +63,36 @@ public class MessageRestController {
         message.setText(text);
         message = messageService.save(message);
         return MessageDTO.toDTO(message);
+    }
+
+    @PostMapping("/objectMapper")
+    public  MessageDTO getObjectMapper(
+            @RequestBody String body
+    ) throws JsonProcessingException {
+        ObjectMapper om = new ObjectMapper();
+        Message message = om.readValue(body, Message.class);
+        return MessageDTO.toDTO(message);
+    }
+
+    @PostMapping("/objectMapperMap")
+    public  Map<String, Object> getObjectMapperMap(
+            @RequestBody String body
+    ) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
+        };
+        Map<String, Object> options = mapper.readValue(body, typeRef);
+
+        return options;
+    }
+
+    @PostMapping("/objectMapperList")
+    public List<Message> getObjectMapperList(
+            @RequestBody String body
+    ) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Message> options = Arrays.asList(mapper.readValue(body, Message[].class));
+//        List<Message> options = mapper.readerForListOf(Message.class).readValue(body);
+        return options;
     }
 }
